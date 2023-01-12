@@ -1,11 +1,40 @@
-# starter-express-api
+# Overview
 
-This is the simplest possible nodejs api using express that responds to any request with: 
-```
-Yo!
-```
+Speed Reader API
 
-### Deploy it in 7 seconds: 
+# Stacks
 
-[![Deploy to Cyclic](https://deploy.cyclic.app/button.svg)](https://deploy.cyclic.app/)
+- MongoDB
+- Node
+- Express
+- Babel (Transpile ES6)
 
+# Installation
+
+- `git clone git@github.com:mfalfath25/sr-backend-new.git`
+- `cd sr-backend-new`
+- `yarn`
+- `yarn dev` Run as Development
+
+# API Routes
+
+`http://localhost:8080/api/v1/auth`
+
+- post `/register`
+- post `/login`
+- get `/users`
+- get `/users/:userId`
+- put `/users/:userId`
+- delete `/users/:userId`
+
+`http://localhost:8080/api/v1/setting`
+
+- get `/setting/:userId`
+- put `/setting/:userId`
+
+`http://localhost:8080/api/v1/training`
+
+- get `/all`
+- get `/user/:userId`
+- post `/add/:userId`
+- delete `/delete/:trainingId`
