@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf dist && babel app.js --out-dir dist --copy-files",
-    "start": "node dist/app.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node app.js"
+    "build": "rimraf dist && babel src --out-dir dist --copy-files",
+    "start": "cross-env NODE_ENV=production node dist/app.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/app.js"
   },
   "repository": {
     "type": "git",
