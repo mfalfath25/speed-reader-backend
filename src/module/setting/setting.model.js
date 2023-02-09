@@ -3,6 +3,10 @@ import mongoose from 'mongoose'
 const schema = mongoose.Schema
 
 const settingSchema = new schema({
+  traineeId: {
+    type: String,
+    required: true,
+  },
   isFontSerif: {
     type: Boolean,
     default: false,
@@ -17,4 +21,5 @@ const settingSchema = new schema({
   },
 })
 
-export { settingSchema }
+const SettingModel = mongoose.model('setting', settingSchema)
+export { SettingModel }

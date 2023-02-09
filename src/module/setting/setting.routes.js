@@ -8,11 +8,13 @@ const settingRoutes = express.Router()
 settingRoutes.get('/', (req, res, next) => {
   res.json({ message: 'from index api' })
 })
+// Get all Setting
+settingRoutes.get('/all', auth, asyncWrapper(settingController.findAll))
 
-// Get User Setting
+// Get Setting by userId
 settingRoutes.get('/:userId', auth, asyncWrapper(settingController.findOne))
 
-// Update User Setting
+// Update Setting by userId
 settingRoutes.put('/:userId', auth, asyncWrapper(settingController.update))
 
 export { settingRoutes }

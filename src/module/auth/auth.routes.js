@@ -9,22 +9,22 @@ authRoutes.get('/', (req, res, next) => {
   res.json({ message: 'from index api' })
 })
 
-// Create
+// Create User
 authRoutes.post('/register', asyncWrapper(userController.register))
 
-// Login
+// Login User
 authRoutes.post('/login', asyncWrapper(userController.login))
 
-// Get All Data
+// Get All Users
 authRoutes.get('/users', auth, asyncWrapper(userController.findAll))
 
-// Get by ID
+// Get User by userId
 authRoutes.get('/users/:userId', auth, asyncWrapper(userController.findOne))
 
-// Update by ID
+// Update User by userId
 authRoutes.put('/users/:userId', auth, asyncWrapper(userController.update))
 
-// Delete
+// Delete User by userId
 authRoutes.delete('/users/:userId', auth, asyncWrapper(userController.delete))
 
 export { authRoutes }
