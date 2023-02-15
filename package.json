@@ -2,23 +2,23 @@
   "name": "sr-backend-new",
   "version": "1.0.0",
   "description": "Speed Reader API",
-  "main": "src/app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && babel src --out-dir dist --copy-files",
-    "start": "cross-env NODE_ENV=production node dist/app.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/app.js"
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cyclic-software/starter-express-api.git"
+    "url": "git+https://github.com/mfalfath25/sr-backend-new.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cyclic-software/starter-express-api/issues"
+    "url": "https://github.com/mfalfath25/sr-backend-new.git/issues"
   },
-  "homepage": "https://github.com/cyclic-software/starter-express-api#readme",
+  "homepage": "https://github.com/mfalfath25/sr-backend-new#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
