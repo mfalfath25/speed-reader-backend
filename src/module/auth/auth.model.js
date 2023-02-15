@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import { settingSchema } from '../setting/setting.model'
 
 const schema = mongoose.Schema
 
@@ -16,14 +15,17 @@ const userSchema = new schema({
     type: String,
     required: true,
   },
-  setting: settingSchema,
+  setting: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'setting',
+  },
   trainings: [
     {
-      type: mongoose.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'training',
     },
   ],
 })
 
-const UserModel = mongoose.model('user', userSchema)
+const UserModel = mongoose.model('trainee', userSchema)
 export { UserModel }

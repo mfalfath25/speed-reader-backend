@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { UserModel } from './auth.model'
 import httpStatus from '../../utils/httpStatus'
 import appConfig from '../../config/env'
+import { UserModel } from './auth.model'
+import { SettingModel } from '../setting/setting.model'
 
 const userController = {}
 
@@ -18,15 +19,26 @@ userController.register = async (req, res, next) => {
     } else {
       const user = new UserModel(req.body)
       if (req.body.password) {
-        user.hash = await bcrypt.hashSync(req.body.password, 10)
+        user.hash = bcrypt.hashSync(req.body.password, 10)
       }
       user.password = user.hash
-      user.setting = {} // initialize setting object with default values
-      await user.save()
-      return res.status(httpStatus.CREATED).json({
-        status: 'OK',
-        message: 'Registrasi berhasil',
-        data: user,
+
+      user.save().then((user) => {
+        const setting = new SettingModel({
+          traineeId: user._id,
+          isFontSerif: false,
+          fixationCount: 0,
+          fontColor: '#000000',
+        })
+        setting.save().then((setting) => {
+          user.setting = setting._id
+          user.save()
+        })
+
+        return res.status(httpStatus.CREATED).json({
+          status: 'OK',
+          message: 'Registrasi berhasil',
+        })
       })
     }
   } catch (error) {
@@ -43,6 +55,9 @@ userController.login = async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await UserModel.findOne({ email: email })
+      .populate('trainings')
+      .populate('setting')
+      .exec()
     if (!user) {
       return res.status(httpStatus.UNAUTHORIZED).json({
         status: 'ERROR',
@@ -93,10 +108,13 @@ userController.findAll = async (req, res) => {
   }
 }
 
-// Get User by ID
+// Get User by userId
 userController.findOne = async (req, res) => {
   try {
-    let user = await UserModel.findById(req.params.userId).populate('trainings')
+    const user = await UserModel.findById(req.params.userId)
+      .populate('trainings')
+      .populate('setting')
+      .exec()
     if (!user) {
       return res.status(httpStatus.BAD_REQUEST).json({
         status: 'ERROR',
@@ -114,31 +132,30 @@ userController.findOne = async (req, res) => {
   }
 }
 
-// Update User by ID
+// Update User by userId
 userController.update = async (req, res) => {
   try {
-    let user = await UserModel.findById(req.params.userId)
+    const user = await UserModel.findByIdAndUpdate(req.params.userId, req.body, { new: true })
     if (!user) {
       return res
         .status(httpStatus.BAD_REQUEST)
         .json({ status: 'ERROR', message: 'User tidak ditemukan' })
+    } else {
+      return res.json({
+        status: 'OK',
+        message: 'Data berhasil diperbarui',
+        data: user.username,
+      })
     }
-    Object.assign(user, req.body)
-    await user.save()
-    return res.json({
-      status: 'OK',
-      message: 'Data berhasil diperbarui',
-      data: user,
-    })
   } catch (error) {
     return res.status(500).json({ status: 'ERROR', error: error.toString() })
   }
 }
 
-// Delete User by ID
+// Delete User by userId
 userController.delete = async (req, res) => {
   try {
-    let user = await UserModel.findByIdAndRemove(req.params.userId)
+    const user = await UserModel.findByIdAndRemove(req.params.userId)
     if (!user) {
       return res
         .status(httpStatus.BAD_REQUEST)

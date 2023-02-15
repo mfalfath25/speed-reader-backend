@@ -1,7 +1,5 @@
-import express from 'express'
-import { TrainingModel } from './training.model'
 import httpStatus from '../../utils/httpStatus'
-import appConfig from '../../config/env'
+import { TrainingModel } from './training.model'
 import { UserModel } from '../auth/auth.model'
 
 const trainingController = {}
@@ -23,7 +21,7 @@ trainingController.add = async (req, res, next) => {
       readDate: req.body.readDate,
     })
     training.save().then((training) => {
-      UserModel.findById(req.params.userId, function (err, user) {
+      UserModel.findById(req.params.userId, (err, user) => {
         if (err) return handleError(err)
         user.trainings.push(training)
         user.save()
@@ -60,14 +58,21 @@ trainingController.findAll = async (req, res) => {
   }
 }
 
-// Get Training by userID
+// Get Training by userId
 trainingController.findByUserId = async (req, res) => {
   try {
     const training = await TrainingModel.find({ traineeId: req.params.userId })
-    return res.status(httpStatus.OK).json({
-      status: 'OK',
-      data: { training },
-    })
+    if (!training) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        status: 'ERROR',
+        message: 'Data training tidak ditemukan',
+      })
+    } else {
+      return res.status(httpStatus.OK).json({
+        status: 'OK',
+        data: { training },
+      })
+    }
   } catch (error) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       status: 'ERROR',
@@ -77,7 +82,7 @@ trainingController.findByUserId = async (req, res) => {
   }
 }
 
-// Delete Training by trainingID
+// Delete Training by trainingId
 trainingController.delete = async (req, res, next) => {
   try {
     const training = await TrainingModel.findByIdAndDelete(req.params.trainingId)
