@@ -1,5 +1,5 @@
 import express, { json } from 'express'
-// import cors from 'cors'
+import cors from 'cors'
 import morgan from 'morgan'
 import baseRouter from './routes'
 import appConfig from './config/env'
@@ -13,13 +13,13 @@ app.use(json())
 app.use(morgan('dev'))
 
 // CORS config
-// app.use(
-//   cors({
-//     origin: appConfig.CLIENT_URL,
-//     methods: 'GET, POST, PUT, DELETE, OPTIONS',
-//     credentials: true,
-//   })
-// )
+app.use(
+  cors({
+    origin: appConfig.CLIENT_URL,
+    methods: 'GET, POST, PUT, DELETE, OPTIONS',
+    credentials: true,
+  })
+)
 
 // Headers config
 app.use((req, res, next) => {
@@ -39,11 +39,12 @@ app.get('/', async (req, res) => {
     message: 'Speed-Reader Backend API',
   })
 })
+
 app.use('/', baseRouter)
 
 connectMongo()
 
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
   console.log(`Server running on Production? ${isProduction}`)
