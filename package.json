@@ -2,12 +2,12 @@
   "name": "sr-backend-new",
   "version": "1.0.0",
   "description": "Speed Reader API",
-  "main": "dist/index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && babel src --out-dir dist --copy-files",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/index.js"
+    "start": "cross-env NODE_ENV=production node dist/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/server.js"
   },
   "repository": {
     "type": "git",
