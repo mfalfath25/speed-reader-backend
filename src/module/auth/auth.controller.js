@@ -114,6 +114,7 @@ userController.findOne = async (req, res) => {
     const user = await UserModel.findById(req.params.userId)
       .populate('trainings')
       .populate('setting')
+      .select('-password')
       .exec()
     if (!user) {
       return res.status(httpStatus.BAD_REQUEST).json({
