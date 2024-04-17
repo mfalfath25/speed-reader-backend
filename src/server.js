@@ -10,28 +10,19 @@ const app = express()
 const isProduction = process.env.NODE_ENV === 'production'
 
 app.use(json())
-app.use(morgan('dev'))
+if (!isProduction) {
+  app.use(morgan('dev'))
+}
 
-// CORS config
+// CORS & Headers config
 app.use(
   cors({
     origin: appConfig.CLIENT_URL,
     methods: 'GET, POST, PUT, DELETE, OPTIONS',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
     credentials: true,
   })
 )
-
-// Headers config
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', appConfig.CLIENT_URL)
-  res.header('Access-Control-Allow-Credentials', true)
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  )
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  next()
-})
 
 app.get('/', async (req, res) => {
   res.json({
@@ -42,11 +33,23 @@ app.get('/', async (req, res) => {
 
 app.use('/', baseRouter)
 
-connectMongo()
+connectMongo().catch((error) => {
+  console.error('Failed to connect to MongoDB:', error)
+})
 
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
   console.log(`Server running on Production? ${isProduction}`)
   console.log(`Server is running on PORT ${PORT}`)
+})
+
+process.on('uncaughtException', (err, origin) => {
+  console.error('An uncaught error occurred!')
+  console.error(err)
+  console.error('Origin: ', origin)
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
 })
